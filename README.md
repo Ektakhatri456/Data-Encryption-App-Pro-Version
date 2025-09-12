@@ -23,11 +23,11 @@ Gumroad webhook: sends license key to buyer via email
 
 Create a .env file with:
 
-ADMIN_KEY=your_admin_key
-SMTP_SERVER=your_smtp_server
-SMTP_PORT=587
-SMTP_USERNAME=your_email
-SMTP_PASSWORD=your_password
+- ADMIN_KEY=your_admin_key
+- SMTP_SERVER=your_smtp_server
+- SMTP_PORT=587
+- SMTP_USERNAME=your_email
+- SMTP_PASSWORD=your_password
 
 ## ▶️ Run
 streamlit run pro_vault_pro.py
