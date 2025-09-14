@@ -575,11 +575,14 @@ if st.sidebar.button("Logout"):
 webhook_app = Flask(__name__)
 
 # Email config (set your SMTP server details here)
-SMTP_SERVER = "smtp.gmail.com"
-SMTP_PORT = 587
-SMTP_USERNAME = "ekki1608006@gmail.com"
-SMTP_PASSWORD = "ukvomydyotmirrxl"
-EMAIL_FROM = "ekki1608006@gmail.com"
+
+   SMTP_PASSWORD = st.secrets["SMTP_PASSWORD"]
+   ADMIN_KEY = st.secrets["ADMIN_KEY"]
+   SMTP_USERNAME = st.secrets["SMTP_USERNAME"]
+   EMAIL_FROM = st.secrets["EMAIL_FROM"]
+   SMTP_SERVER = "smtp.gmail.com"
+   SMTP_PORT = 587
+   
 EMAIL_SUBJECT = "Your Secure Data Vault License Key"
 
 def send_license_email(to_email: str, license_key: str):
@@ -631,3 +634,4 @@ def run_flask():
 # Run Flask webhook server in a separate thread alongside Streamlit
 
 threading.Thread(target=run_flask, daemon=True).start()
+
