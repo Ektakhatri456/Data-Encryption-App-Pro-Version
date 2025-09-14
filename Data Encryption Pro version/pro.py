@@ -317,11 +317,11 @@ if "key_b64" not in st.session_state:
 if "is_admin" not in st.session_state:
     st.session_state["is_admin"] = False
 
-st.sidebar.markdown("**Pro features:** File encryption • Export • Admin license keys")
+st.sidebar.markdown("**Pro features:** File encryption  • Export  • Admin license keys")
 
 # --- License gating ---
 if not st.session_state["license_ok"]:
-    st.subheader("Step 1 — Enter your License Key")
+    st.subheader("Enter your License Key")
     lic = st.text_input("License key", type="password", key="lic_in")
     if st.button("Verify License"):
         if not lic or not lic.strip():
@@ -575,11 +575,11 @@ if st.sidebar.button("Logout"):
 webhook_app = Flask(__name__)
 
 # Email config (set your SMTP server details here)
-SMTP_SERVER = "smtp.example.com"
+SMTP_SERVER = "smtp.gmail.com"
 SMTP_PORT = 587
-SMTP_USERNAME = "your_email@example.com"
-SMTP_PASSWORD = "your_email_password"
-EMAIL_FROM = "your_email@example.com"
+SMTP_USERNAME = "ekki1608006@gmail.com"
+SMTP_PASSWORD = "ukvomydyotmirrxl"
+EMAIL_FROM = "ekki1608006@gmail.com"
 EMAIL_SUBJECT = "Your Secure Data Vault License Key"
 
 def send_license_email(to_email: str, license_key: str):
@@ -629,4 +629,5 @@ def run_flask():
     webhook_app.run(host="0.0.0.0", port=5001)
 
 # Run Flask webhook server in a separate thread alongside Streamlit
+
 threading.Thread(target=run_flask, daemon=True).start()
