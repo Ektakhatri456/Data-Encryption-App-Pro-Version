@@ -25,6 +25,7 @@ import threading
 from flask import Flask, request, jsonify
 import smtplib
 from email.message import EmailMessage
+import logging
 
 st.set_page_config(page_title="Secure Data Vault — Pro", layout="wide")
 
@@ -230,7 +231,8 @@ def check_lockout(user_row):
     return False
 
 def add_license(key: str = None):
-    conn = get_db(); c = conn.cursor()
+    conn = get_db()
+    c = conn.cursor()
     if not key:
         key = gen_license_key()
     try:
@@ -239,6 +241,9 @@ def add_license(key: str = None):
         return True, key
     except sqlite3.IntegrityError:
         return False, "exists"
+    except Exception as e:
+        logging.error(f"Error adding license key: {e}")
+        return False, "error"
 
 def valid_license(key: str):
     c = get_db().cursor()
@@ -585,21 +590,24 @@ webhook_app = Flask(__name__)
    
 EMAIL_SUBJECT = "Your Secure Data Vault License Key"
 
+logging.basicConfig(level=logging.INFO)
+
 def send_license_email(to_email: str, license_key: str):
     msg = EmailMessage()
     msg["Subject"] = EMAIL_SUBJECT
     msg["From"] = EMAIL_FROM
     msg["To"] = to_email
     msg.set_content(f"Thank you for your purchase!\n\nYour license key is:\n\n{license_key}\n\nKeep it safe.")
-
+    
     try:
         with smtplib.SMTP(SMTP_SERVER, SMTP_PORT) as server:
             server.starttls()
             server.login(SMTP_USERNAME, SMTP_PASSWORD)
             server.send_message(msg)
-        print(f"License email sent to {to_email}")
+        logging.info(f"License email sent to {to_email}")
     except Exception as e:
-        print(f"Failed to send email to {to_email}: {e}")
+        logging.error(f"Failed to send email to {to_email}: {e}")
+
 
 @webhook_app.route("/gumroad-webhook", methods=["POST"])
 def gumroad_webhook():
@@ -627,11 +635,3 @@ def gumroad_webhook():
     send_license_email(buyer_email, license_key)
 
     return jsonify({"message": "License generated and emailed", "license_key": license_key}), 200
-
-def run_flask():
-    webhook_app.run(host="0.0.0.0", port=5001)
-
-# Run Flask webhook server in a separate thread alongside Streamlit
-
-threading.Thread(target=run_flask, daemon=True).start()
-
