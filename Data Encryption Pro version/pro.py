@@ -580,8 +580,7 @@ if st.sidebar.button("Logout"):
 webhook_app = Flask(__name__)
 
 # Email config (set your SMTP server details here)
-
-   SMTP_PASSWORD = st.secrets["SMTP_PASSWORD"]
+SMTP_PASSWORD = st.secrets["SMTP_PASSWORD"]
    ADMIN_KEY = st.secrets["ADMIN_KEY"]
    SMTP_USERNAME = st.secrets["SMTP_USERNAME"]
    EMAIL_FROM = st.secrets["EMAIL_FROM"]
@@ -635,3 +634,4 @@ def gumroad_webhook():
     send_license_email(buyer_email, license_key)
 
     return jsonify({"message": "License generated and emailed", "license_key": license_key}), 200
+
